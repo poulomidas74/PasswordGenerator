@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script>
+        function generatePassword() {
+            const length = document.getElementById('length').value;
+            const includeNumbers = document.getElementById('includeNumbers').checked;
+            const includeCharacters = document.getElementById('includeCharacters').checked;
+
+            const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numbers = '0123456789';
+            const characters = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+            let charset = letters;
+
+            if (includeNumbers) charset += numbers;
+            if (includeCharacters) charset += characters;
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                password += charset[randomIndex];
+            }
+
+            document.getElementById('password').value = password;
+        }
+
+        function copyToClipboard() {
+            const passwordField = document.getElementById('password');
+            passwordField.select();
+            passwordField.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+        }
+
+        window.onload = function() {
+            generatePassword();
+        }
+    </script>
+</head>
+<body class="bg-black flex items-center justify-center min-h-screen">
+    <div class="bg-gray-800 p-4 rounded-lg flex flex-col items-center space-y-4">
+        <div class="flex items-center space-x-2">
+            <input id="password" type="text" class="bg-gray-700 text-white p-2 rounded-lg flex-grow" readonly>
+            <button onclick="copyToClipboard()" class="bg-blue-600 text-white px-4 py-2 rounded-lg">copy</button>
+        </div>
+        <div class="flex items-center space-x-2 text-orange-500">
+            <input id="length" type="range" min="1" max="20" value="12" class="slider" oninput="generatePassword()">
+            <span>Length (<span id="lengthValue">12</span>)</span>
+            <label class="flex items-center space-x-1">
+                <input id="includeNumbers" type="checkbox" onclick="generatePassword()">
+                <span>Numbers</span>
+            </label>
+            <label class="flex items-center space-x-1">
+                <input id="includeCharacters" type="checkbox" onclick="generatePassword()">
+                <span>Characters</span>
+            </label>
+        </div>
+    </div>
+    <script>
+        document.getElementById('length').addEventListener('input', function() {
+            document.getElementById('lengthValue').textContent = this.value;
+        });
+    </script>
+</body>
+</html>
